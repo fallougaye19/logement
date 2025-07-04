@@ -12,7 +12,7 @@ import RendezVousPage from '@/pages/RendezVousPage.vue'
 import UtilisateurPage from '@/pages/UtilisateurPage.vue'
 import ProfilePage from '@/pages/ProfilePage.vue'
 
-//import auth from '@/middleware/auth.js';
+import auth from '@/middleware/auth.js';
 
 
 
@@ -20,7 +20,7 @@ const routes = [
     { path: '/', redirect: '/login' },
     { path: '/login', component: LoginForm },
     { path: '/register', component: RegisterForm },
-    { path: '/dashboard', component: Dashboard,}, //beforeEnter: [auth] },
+    { path: '/dashboard', component: Dashboard,beforeEnter: [auth] },
     { path: '/maisons', name: 'Maisons', component: MaisonPage},
     { path: '/chambres', name: 'Chambres', component: ChambrePage},
     { path: '/contrats', name: 'Contrats', component: ContratPage},

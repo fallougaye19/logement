@@ -12,9 +12,6 @@ use App\Http\Controllers\Api\ProblemeController;
 use App\Http\Controllers\Api\RendezVousController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\StatsController;
-use App\Models\Media;
-use App\Models\Paiement;
-use App\Models\Probleme;
 
 /*
 |--------------------------------------------------------------------------

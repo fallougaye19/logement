@@ -98,6 +98,10 @@
                     <p class="text-gray-600 text-sm mb-3 line-clamp-2">
                         {{ maison.description || "Aucune description" }}
                     </p>
+                    <p>
+                        Propriétaire :
+                        {{ chambre.proprietaire?.nom || "Inconnu" }}
+                    </p>
                     <div class="flex flex-wrap gap-2 mb-4">
                         <span
                             class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs"
