@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginForm from '@/components/LoginForm.vue'
+import Home from '@/pages/Home.vue'
 import RegisterForm from '@/components/RegisterForm.vue'
 import Dashboard from '@/components/Dashboard.vue'
 import MaisonPage from '@/pages/MaisonPage.vue'
@@ -17,7 +18,8 @@ import ProfilePage from '@/pages/ProfilePage.vue'
 
 
 const routes = [
-    { path: '/', redirect: '/login' },
+    // { path: '/', redirect: '/login' },
+     { path: '/', component: Home },
     { path: '/login', component: LoginForm },
     { path: '/register', component: RegisterForm },
     { path: '/dashboard', component: Dashboard,}, //beforeEnter: [auth] },
