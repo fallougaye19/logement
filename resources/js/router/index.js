@@ -12,6 +12,7 @@ import ProblemePage from '@/pages/ProblemePage.vue'
 import RendezVousPage from '@/pages/RendezVousPage.vue'
 import UtilisateurPage from '@/pages/UtilisateurPage.vue'
 import ProfilePage from '@/pages/ProfilePage.vue'
+import DashboardLoc from '@/components/DashboardLoc.vue'
 
 //import auth from '@/middleware/auth.js';
 
@@ -31,7 +32,8 @@ const routes = [
     { path: '/problemes', name: 'Problemes', component: ProblemePage},
     { path: '/rendez-vous', name: 'RendezVous', component: RendezVousPage},
     { path: '/utilisateurs', name: 'Utilisateurs', component: UtilisateurPage},
-    { path: '/profile', name: 'Profiles', component:ProfilePage}
+    { path: '/profile', name: 'Profiles', component:ProfilePage},
+      { path: '/dashboardLoc', component: DashboardLoc }, // <-- AJOUT ICI
 ]
 
 const router = createRouter({

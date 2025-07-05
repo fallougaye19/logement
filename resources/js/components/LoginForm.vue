@@ -1,6 +1,6 @@
 <template>
     <div class="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-        <form @submit.prevent="submit" class="bg-white shadow-lg p-8 rounded-xl w-full max-w-sm space-y-6">
+        <form @submit.prevent="login" class="bg-white shadow-lg p-8 rounded-xl w-full max-w-sm space-y-6">
             <h1 class="text-2xl font-bold text-center text-gray-800">Connexion</h1>
 
             <div>
@@ -43,15 +43,24 @@ const router = useRouter()
 const form = ref({ email: '', password: '' })
 const error = ref('')
 
-const submit = async () => {
-    error.value = ''
+const login = async () => {
+    error.value = ''  // Clear any previous error
     try {
-        const { data } = await axios.post('/api/auth/login', form.value)
+        const { data } = await axios.post('/api/auth/login', form.value) // Use /api/auth/login to match your API route
         localStorage.setItem('token', data.token)
         axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`
-        router.push('/dashboard')
-    } catch {
-        error.value = 'Identifiants invalides'
+
+        // Vérification si l'utilisateur a un rôle valide avant redirection
+        const userRole = data.user.role;
+        if (userRole === 'locataire') {
+            router.push('/dashboardLoc')  // Redirection vers le dashboardLoc pour les locataires
+        } else if (userRole === 'proprietaire') {
+            router.push('/dashboard')  // Redirection vers le dashboard pour les propriétaires
+        } else {
+            error.value = 'Rôle utilisateur non valide'; // Si aucun rôle valide n'est trouvé
+        }
+    } catch (e) {
+        error.value = e.response?.data?.message || "Erreur lors de la connexion"
     }
 }
 </script>
