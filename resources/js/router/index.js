@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginForm from '@/components/LoginForm.vue'
+import Home from '@/pages/Home.vue'
 import RegisterForm from '@/components/RegisterForm.vue'
 import Dashboard from '@/components/Dashboard.vue'
 import MaisonPage from '@/pages/MaisonPage.vue'
@@ -11,13 +12,15 @@ import ProblemePage from '@/pages/ProblemePage.vue'
 import RendezVousPage from '@/pages/RendezVousPage.vue'
 import UtilisateurPage from '@/pages/UtilisateurPage.vue'
 import ProfilePage from '@/pages/ProfilePage.vue'
+import DashboardLoc from '@/components/DashboardLoc.vue'
 
 import auth from '@/middleware/auth.js';
 
 
 
 const routes = [
-    { path: '/', redirect: '/login' },
+    // { path: '/', redirect: '/login' },
+     { path: '/', component: Home },
     { path: '/login', component: LoginForm },
     { path: '/register', component: RegisterForm },
     { path: '/dashboard', component: Dashboard,beforeEnter: [auth] },
@@ -29,7 +32,8 @@ const routes = [
     { path: '/problemes', name: 'Problemes', component: ProblemePage},
     { path: '/rendez-vous', name: 'RendezVous', component: RendezVousPage},
     { path: '/utilisateurs', name: 'Utilisateurs', component: UtilisateurPage},
-    { path: '/profile', name: 'Profiles', component:ProfilePage}
+    { path: '/profile', name: 'Profiles', component:ProfilePage},
+      { path: '/dashboardLoc', component: DashboardLoc }, // <-- AJOUT ICI
 ]
 
 const router = createRouter({
