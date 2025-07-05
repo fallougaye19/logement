@@ -5,23 +5,37 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use App\Models\Maison;
+use App\Models\Chambre;
+use App\Models\Contrat;
+use App\Models\Paiement;
+use App\Models\Probleme;
+use App\Models\Rendez_vous;
 
 class StatsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function stats()
     {
-        return [
-            "utilisateurs" => \App\Models\User::count(),
-            "maisons" => \App\Models\Maison::count(),
-            "chambres" => \App\Models\Chambre::count(),
-            "contrats_actifs" => \App\Models\Contrat::where('actif', true)->count(),
-            "rendez_vous_a_venir" => \App\Models\Rendez_vous::where("date_heure", ">", now())->count(),
-            "problemes_non_resolus" => \App\Models\Probleme::where("resolu", false)->count(),
-            "paiements_en_retard" => \App\Models\Paiement::where("statut", "en attente")->count()
-        ];
+        try {
+            return response()->json([
+                'utilisateurs' => User::count(),
+                'maisons' => Maison::count(),
+                'chambres' => Chambre::count(),
+                "contrats_actifs" => Contrat::where('actif', true)->count(),
+                "rendez_vous_a_venir" => Rendez_vous::where("date_heure", ">", now())->count(),
+                "problemes_non_resolus" => Probleme::where("resolu", false)->count(),
+                "paiements_en_retard" => Paiement::where("statut", "en attente")->count()
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Erreur serveur',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**

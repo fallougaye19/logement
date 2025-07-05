@@ -19,10 +19,10 @@ import auth from '@/middleware/auth.js';
 
 
 const routes = [
-    // { path: '/', redirect: '/login' },
-     { path: '/', component: Home },
+    { path: '/', component: Home },
     { path: '/login', component: LoginForm },
     { path: '/register', component: RegisterForm },
+    
     { path: '/dashboard', component: Dashboard,beforeEnter: [auth] },
     { path: '/maisons', name: 'Maisons', component: MaisonPage},
     { path: '/chambres', name: 'Chambres', component: ChambrePage},
@@ -32,8 +32,9 @@ const routes = [
     { path: '/problemes', name: 'Problemes', component: ProblemePage},
     { path: '/rendez-vous', name: 'RendezVous', component: RendezVousPage},
     { path: '/utilisateurs', name: 'Utilisateurs', component: UtilisateurPage},
-    { path: '/profile', name: 'Profiles', component:ProfilePage},
-      { path: '/dashboardLoc', component: DashboardLoc }, // <-- AJOUT ICI
+    { path: '/profile', name: 'Profiles', component: ProfilePage, beforeEnter: [auth]},
+    { path: '/dashboardLoc', component: DashboardLoc },
+
 ]
 
 const router = createRouter({

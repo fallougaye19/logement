@@ -79,7 +79,6 @@
                     <option disabled value="">-- Sélectionner --</option>
                     <option value="proprietaire">Propriétaire</option>
                     <option value="locataire">Locataire</option>
-                    <option value="admin">Admin</option>
                 </select>
             </div>
 

@@ -3,7 +3,7 @@
         <!-- Titre + bouton ajouter -->
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-gray-800">Liste des contrats</h2>
-            <button @click="openForm()" class="btn inline">
+            <button v-if="isProprietaire" @click="openForm()" class="btn inline">
                 <svg
                     class="w-4 h-4 mr-2"
                     fill="none"
@@ -30,7 +30,7 @@
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
                 />
             </div>
-            <select
+            <select v-if="isProprietaire"
                 v-model="filterStatut"
                 class="px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
             >
@@ -144,7 +144,7 @@
                                     />
                                 </svg>
                             </button>
-                            <button
+                            <button v-if="isProprietaire"
                                 @click="editContrat(contrat)"
                                 class="btn-icon text-yellow-600"
                                 title="Modifier"
@@ -163,7 +163,7 @@
                                     />
                                 </svg>
                             </button>
-                            <button
+                            <button v-if="isProprietaire"
                                 @click="deleteContrat(contrat.id)"
                                 class="btn-icon text-red-600"
                                 title="Supprimer"
@@ -210,7 +210,7 @@
                 />
             </svg>
             <p class="text-gray-600">Aucun contrat trouvé</p>
-            <button @click="openForm()" class="btn mt-4">
+            <button v-if="isProprietaire" @click="openForm()" class="btn mt-4">
                 Ajouter le premier contrat
             </button>
         </div>
@@ -412,6 +412,9 @@ const filterStatut = ref("");
 // Pagination
 const currentPage = ref(1);
 const perPage = 10;
+
+const user = JSON.parse(localStorage.getItem("user"));
+const isProprietaire = computed(() => user?.role === 'proprietaire');
 
 // Calcul des données filtrées
 const filteredContrats = computed(() => {

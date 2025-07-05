@@ -5,7 +5,7 @@
             <h2 class="text-2xl font-bold text-gray-800">
                 Liste des rendez-vous
             </h2>
-            <button @click="openForm()" class="btn inline">
+            <button v-if="isProprietaire" @click="openForm()" class="btn inline">
                 <svg
                     class="w-4 h-4 mr-2"
                     fill="none"
@@ -137,7 +137,7 @@
                                     />
                                 </svg>
                             </button>
-                            <button
+                            <button v-if="isProprietaire"
                                 @click="editRendezVous(rendezVous)"
                                 class="btn-icon text-yellow-600"
                                 title="Modifier"
@@ -203,9 +203,6 @@
                 />
             </svg>
             <p class="text-gray-600">Aucun rendez-vous trouvé</p>
-            <button @click="openForm()" class="btn mt-4">
-                Ajouter le premier rendez-vous
-            </button>
         </div>
 
         <!-- Pagination -->
@@ -398,6 +395,10 @@ const filterStatut = ref("");
 // Pagination
 const currentPage = ref(1);
 const perPage = 10;
+
+const user = JSON.parse(localStorage.getItem("user"));
+const isProprietaire = computed(() => user?.role === 'proprietaire');
+const isLocataire = computed(() => user?.role === 'locataire');
 
 // Calcul des données filtrées
 const filteredRendezVous = computed(() => {

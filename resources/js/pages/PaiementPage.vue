@@ -5,7 +5,7 @@
             <h2 class="text-2xl font-bold text-gray-800">
                 Liste des paiements
             </h2>
-            <button @click="openForm()" class="btn inline">
+            <button v-if="!isLocataire" @click="openForm()" class="btn inline">
                 <svg
                     class="w-4 h-4 mr-2"
                     fill="none"
@@ -144,6 +144,7 @@
                                 </svg>
                             </button>
                             <button
+                                v-if="isProprietaire"
                                 @click="editPaiement(paiement)"
                                 class="btn-icon text-yellow-600"
                                 title="Modifier"
@@ -163,6 +164,7 @@
                                 </svg>
                             </button>
                             <button
+                                v-if="isProprietaire"
                                 @click="deletePaiement(paiement.id)"
                                 class="btn-icon text-red-600"
                                 title="Supprimer"
@@ -209,9 +211,6 @@
                 />
             </svg>
             <p class="text-gray-600">Aucun paiement trouvé</p>
-            <button @click="openForm()" class="btn mt-4">
-                Ajouter le premier paiement
-            </button>
         </div>
 
         <!-- Pagination -->
@@ -358,8 +357,8 @@
                                 {{
                                     viewingPaiement.date_paiement
                                         ? formatDate(
-                                              viewingPaiement.date_paiement
-                                          )
+                                                viewingPaiement.date_paiement
+                                            )
                                         : "Non payé"
                                 }}
                             </p>
@@ -385,6 +384,19 @@
                                     {{ viewingPaiement.statut }}
                                 </span>
                             </p>
+                        </div>
+                        <div
+                            v-if="
+                                isProprietaire &&
+                                viewingPaiement.statut !== 'payé'
+                            "
+                        >
+                            <button
+                                @click="confirmerPaiement(viewingPaiement.id)"
+                                class="btn mt-4 bg-green-600 hover:bg-green-700"
+                            >
+                                Confirmer le paiement
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -413,6 +425,22 @@ const filterStatut = ref("");
 // Pagination
 const currentPage = ref(1);
 const perPage = 10;
+
+const user = JSON.parse(localStorage.getItem("user"));
+const isProprietaire = computed(() => user?.role === "proprietaire");
+
+
+const confirmerPaiement = async (id) => {
+    if (!confirm("Voulez-vous confirmer ce paiement ?")) return;
+        try {
+            await axios.put(`/api/paiements/${id}`, { statut: "payé" });
+            fetchPaiements();
+            showSuccessMessage("Paiement confirmé !");
+        } catch (e) {
+            error.value = "Erreur lors de la confirmation";
+            console.error(e);
+        }
+};
 
 // Calcul des données filtrées
 const filteredPaiements = computed(() => {
@@ -489,6 +517,8 @@ const fetchPaiements = async () => {
         loading.value = false;
     }
 };
+
+
 
 const openForm = (paiement = null) => {
     editingPaiement.value = paiement;

@@ -41,8 +41,8 @@
                 />
             </div>
 
-            <!-- Statut -->
-            <div>
+            <!-- Statut – Visibilité conditionnelle -->
+            <div v-if="isProprietaire || isEditingPaye">
                 <label class="text-sm font-medium text-gray-700 block mb-1"
                     >Statut</label
                 >
@@ -67,7 +67,9 @@
                         required
                     />
                 </div>
-                <div>
+
+                <!-- Date de paiement – visible seulement si statut = 'payé' -->
+                <div v-if="form.statut === 'payé' || isProprietaire">
                     <label class="text-sm font-medium text-gray-700 block mb-1"
                         >Date de paiement</label
                     >
@@ -77,6 +79,26 @@
                         class="input"
                     />
                 </div>
+            </div>
+
+            <!-- Mode de paiement -->
+            <div v-if="isProprietaire || isEditing">
+                <label class="text-sm font-medium text-gray-700 block mb-1"
+                    >Mode de paiement</label
+                >
+                <input
+                    v-model="form.mode_paiement"
+                    type="text"
+                    list="modes-paiement"
+                    class="input"
+                />
+                <datalist id="modes-paiement">
+                    <option value="Virement bancaire"></option>
+                    <option value="Mobile Money"></option>
+                    <option value="Espèces"></option>
+                    <option value="Chèque"></option>
+                    <option value="Autre"></option>
+                </datalist>
             </div>
 
             <!-- Bouton -->
@@ -104,7 +126,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits } from "vue";
+import { ref, defineProps, defineEmits, computed, onMounted } from "vue";
 import axios from "axios";
 
 const props = defineProps({
@@ -114,23 +136,26 @@ const props = defineProps({
     },
 });
 
+const isEditing = computed(() => props.paiement !== null);
+
 const emit = defineEmits(["created", "updated"]);
 
-// État du formulaire
+// État utilisateur connecté
+const user = JSON.parse(localStorage.getItem("user"));
+const isProprietaire = computed(() => user?.role === "proprietaire");
+
+// Formulaire
 const initialForm = {
     contrat_id: "",
     montant: "",
-    statut: "",
+    statut: "en attente",
     date_echeance: "",
     date_paiement: "",
+    mode_paiement: "",
 };
 
 const form = ref({ ...initialForm });
-
-if (props.paiement) {
-    form.value = { ...props.paiement };
-}
-
+const editing = ref(!!props.paiement);
 const contrats = ref([]);
 
 // Chargement des contrats
@@ -143,14 +168,26 @@ const fetchContrats = async () => {
     }
 };
 
-fetchContrats();
+onMounted(fetchContrats);
 
-// Mode édition
-const editing = ref(!!props.paiement);
+// Si paiement existant, charger ses données
+if (props.paiement) {
+    form.value = { ...props.paiement };
+}
 
-const message = ref("");
-const success = ref(false);
+// Vérifie si le statut est "payé"
+const isEditingPaye = computed(() => form.value.statut === "payé");
 
+
+// Format monnaie
+const formatePrice = (price) => {
+    return new Intl.NumberFormat("fr-FR", {
+        style: "currency",
+        currency: "XOF",
+    }).format(price);
+};
+
+// Soumission du formulaire
 const submit = async () => {
     try {
         let response;
@@ -175,10 +212,16 @@ const submit = async () => {
         console.error(e);
     }
 };
+
+const message = ref("");
+const success = ref(false);
 </script>
 
 <style scoped>
 .input {
-    @apply w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500;
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm;
+}
+.btn {
+    @apply bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors;
 }
 </style>

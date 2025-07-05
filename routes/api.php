@@ -34,14 +34,15 @@ Route::prefix('auth')->group(function () {
     Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 });
 
-
-Route::apiResource('maisons', MaisonController::class);
-Route::apiResource('chambres', ChambreController::class);
-Route::apiResource('contrats', ContratController::class);
-Route::apiResource('medias', MediaController::class);
-Route::apiResource('paiements', PaiementController::class);
-Route::apiResource('problemes', ProblemeController::class);
-Route::apiResource('rendez-vous', RendezVousController::class);
-Route::apiResource('utilisateurs', UserController::class);
-Route::get('/stats', [StatsController::class, 'index']);
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::apiResource('maisons', MaisonController::class);
+    Route::apiResource('chambres', ChambreController::class);
+    Route::apiResource('contrats', ContratController::class);
+    Route::apiResource('medias', MediaController::class);
+    Route::apiResource('paiements', PaiementController::class);
+    Route::apiResource('problemes', ProblemeController::class);
+    Route::apiResource('rendez-vous', RendezVousController::class);
+    Route::apiResource('utilisateurs', UserController::class);
+    Route::get('/stats', [StatsController::class, 'stats']);
+});
 

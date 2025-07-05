@@ -3,7 +3,7 @@
         <!-- Titre + bouton ajouter -->
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-gray-800">Liste des chambres</h2>
-            <button @click="openForm()" class="btn inline">
+            <button v-if="isProprietaire" @click="openForm()" class="btn inline">
                 <svg
                     class="w-4 h-4 mr-2"
                     fill="none"
@@ -39,7 +39,7 @@
                 <option value="appartement">Appartement</option>
                 <option value="maison">Maison</option>
             </select>
-            <select
+            <select v-if="isProprietaire"
                 v-model="filterStatus"
                 class="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
             >
@@ -109,7 +109,7 @@
                         </svg>
                     </div>
                     <!-- Statut -->
-                    <div class="absolute top-3 right-3">
+                    <div v-if="isProprietaire" class="absolute top-3 right-3">
                         <span
                             :class="
                                 chambre.disponible
@@ -188,7 +188,7 @@
                                     />
                                 </svg>
                             </button>
-                            <button
+                            <button v-if="isProprietaire"
                                 @click="editChambre(chambre)"
                                 class="btn-icon text-yellow-600"
                                 title="Modifier"
@@ -207,7 +207,7 @@
                                     />
                                 </svg>
                             </button>
-                            <button
+                            <button v-if="isProprietaire"
                                 @click="deleteChambre(chambre.id)"
                                 class="btn-icon text-red-600"
                                 title="Supprimer"
@@ -445,6 +445,10 @@ const filterStatus = ref("");
 // Pagination
 const currentPage = ref(1);
 const perPage = 3;
+
+const user = JSON.parse(localStorage.getItem("user"));
+const isProprietaire = computed(() => user?.role === 'proprietaire');
+const isLocataire = computed(() => user?.role === 'locataire');
 
 // Calcul des données filtrées
 const filteredChambres = computed(() => {

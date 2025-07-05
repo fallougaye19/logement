@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Maison;
 use App\Models\Contrat;
-use App\Models\RendezVous;
+use App\Models\Rendez_vous;
 use App\Models\Media;
 
 class Chambre extends Model
@@ -35,6 +35,6 @@ class Chambre extends Model
         return $this->hasMany(Contrat::class);
     }
     public function rendezVous() {
-        return $this->hasMany(RendezVous::class);
+        return $this->hasMany(Rendez_vous::class);
     }
 }

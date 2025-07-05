@@ -232,18 +232,28 @@ const perPage = 10;
 
 // 🔥 Filtre par rôle = "locataire"
 const locataires = computed(() => {
-    return utilisateurs.value.filter((u) => u.role === "locataire");
+    //return utilisateurs.value.filter((u) => u.role === "locataire");
+    return Array.isArray(utilisateurs.value)
+        ? utilisateurs.value.filter((u) => u.role === "locataire")
+        : [];
 });
 
 // 🔍 Recherche par nom ou email
 const filteredLocataires = computed(() => {
     const term = searchTerm.value.toLowerCase();
     if (!term) return locataires.value;
-    return locataires.value.filter(
-        (u) =>
-            u.nom.toLowerCase().includes(term) ||
-            u.email.toLowerCase().includes(term)
-    );
+    // return locataires.value.filter(
+    //     (u) =>
+    //         u.nom.toLowerCase().includes(term) ||
+    //         u.email.toLowerCase().includes(term)
+    // );
+    return Array.isArray(locataires.value)
+        ? locataires.value.filter(
+            (u) =>
+                u.nom?.toLowerCase().includes(term) ||
+                u.email?.toLowerCase().includes(term)
+        )
+        : [];
 });
 
 const paginatedLocataires = computed(() => {
@@ -290,8 +300,8 @@ const fetchUtilisateurs = async () => {
     try {
         loading.value = true;
         error.value = "";
-        const { data } = await axios.get("/api/users");
-        utilisateurs.value = data;
+        const res = await axios.get("/api/users");
+        utilisateurs.value = res.data.data;
     } catch (err) {
         error.value = "Erreur lors du chargement des utilisateurs";
         console.error(err);
